@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.muko.dao.PackingDao">
+
+        <resultMap id="packingMap" type="com.muko.domain.Packing">
+            <id property="pk_code" column="pk_code"/>
+            <result property="pk_unit" column="pk_unit"/>
+            <result property="pk_level" column="pk_level"/>
+            <result property="pk_num" column="pk_num"/>
+            <result property="upk_code" column="upk_code"/>
+        </resultMap>
+
+    <select id="findUtilsByLevel" resultType="java.lang.String" parameterType="java.lang.Integer">
+        select pk_unit
+        from packing
+        where pk_level = #{pk_level};
+    </select>
+
+    <select id="findAll" resultMap="packingMap">
+        select * from packing;
+    </select>
+
+    <select id="findByCode" resultMap="packingMap" parameterType="java.lang.String">
+        select * from packing where pk_code=#{pk_code};
+    </select>
+
+    <select id="findCountsByLevel" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        select count(1) from packing where pk_level=#{pk_level};
+    </select>
+    <select id="findCodeByUnit" resultType="java.lang.String">
+        select pk_code from packing where pk_unit=#{pk_unit} and pk_level=#{pk_level};
+    </select>
+    <select id="findByCondition" resultMap="packingMap" parameterType="com.muko.domain.Packing">
+        select * from packing where 1=1
+        <if test="pk_unit != ''">
+            and pk_unit like concat('%', #{pk_unit}, '%')
+        </if>
+        <if test="pk_level != '' and pk_level != null">
+            and pk_level = #{pk_level}
+        </if>
+    </select>
+
+    <insert id="addRecord" parameterType="com.muko.domain.Packing">
+        insert into packing
+        values (#{pk_code}, #{pk_unit}, #{pk_level}, #{pk_num}, #{upk_code});
+    </insert>
+    <delete id="deleteByCode" parameterType="java.lang.String">
+        delete from packing where pk_code=#{pk_code};
+    </delete>
+    <update id="updateEdit" parameterType="com.muko.domain.Packing">
+        update packing set pk_unit = #{pk_unit}, pk_num=#{pk_num} where pk_code=#{pk_code};
+    </update>
+
+</mapper>

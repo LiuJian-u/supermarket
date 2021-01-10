@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.muko.dao.Wares_basic_infoDao">
+
+    <resultMap id="packingMap" type="com.muko.domain.Wares_basic_info">
+        <id property="pk_code" column="pk_code"/>
+        <result property="pk_unit" column="pk_unit"/>
+        <result property="pk_level" column="pk_level"/>
+        <result property="pk_num" column="pk_num"/>
+        <result property="upk_code" column="upk_code"/>
+    </resultMap>
+
+    <select id="findCountsByCtPk" resultType="java.lang.Integer">
+        select count(1)
+        from wares_basic_info
+        where wbi_code like concat(#{cp}, '%');
+    </select>
+
+    <insert id="addRecord" parameterType="com.muko.domain.Wares_basic_info">
+        insert into wares_basic_info
+        values (#{wbi_code}, #{wbi_name}, #{wbi_imgURL}, #{wbi_pk_code}, #{wbi_ct_code});
+    </insert>
+
+</mapper>

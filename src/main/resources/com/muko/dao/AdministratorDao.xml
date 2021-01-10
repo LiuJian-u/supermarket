@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.muko.dao.AdministratorDao">
+
+<!--    <resultMap id="administratorMap" type="administrator">-->
+<!--        <id property="admin_account" column="admin_account"/>-->
+
+<!--        <result property="admin_password" column="admin_password"/>-->
+
+
+<!--    </resultMap>-->
+
+
+    <select id="findByAp" resultType="java.lang.Integer" parameterType="com.muko.domain.Administrator">
+        select count(*) from administrator where admin_account=#{admin_account} and admin_password=#{admin_password};
+    </select>
+
+</mapper>

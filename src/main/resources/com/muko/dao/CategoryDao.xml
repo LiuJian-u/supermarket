@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.muko.dao.CategoryDao">
+
+    <resultMap id="ctMap" type="com.muko.domain.Category">
+        <id property="ct_count" column="ct_count"/>
+        <result property="ct_name" column="ct_name"/>
+        <result property="ct_level" column="ct_level"/>
+        <result property="uct_code" column="uct_code"/>
+    </resultMap>
+
+    <select id="findNameByLevel" resultType="java.lang.String" parameterType="java.lang.Integer">
+        select ct_name
+        from category
+        where ct_level = #{ct_level};
+    </select>
+
+    <select id="findNameByUctName" resultType="java.lang.String" parameterType="java.lang.String">
+        select ct_name
+        from category
+        where uct_code = (select ct_code from category where ct_name = #{ct_name});
+    </select>
+
+    <select id="findCodeByName" resultType="java.lang.String" parameterType="java.lang.String">
+        select ct_code
+        from category
+        where ct_name = #{name};
+    </select>
+
+    <select id="findNameByCode" resultType="java.lang.String" parameterType="java.lang.String">
+        select ct_name
+        from category
+        where ct_code = #{ct_code};
+    </select>
+
+    <select id="findAll" resultMap="ctMap">
+        select *
+        from category;
+    </select>
+
+    <select id="findByCondition" resultMap="ctMap" parameterType="com.muko.domain.Category">
+        select * from category where 1=1
+        <if test="ct_name != null and ct_name != ''">
+            and ct_name like concat('%', #{ct_name}, '%')
+        </if>
+        <if test="ct_level != null and ct_level != 0">
+            and ct_level = #{ct_level}
+        </if>
+    </select>
+
+    <select id="findByCode" resultMap="ctMap" parameterType="java.lang.String">
+        select *
+        from category
+        where ct_code = #{c_code};
+    </select>
+
+    <select id="findCtNamesByLevel" resultType="java.lang.String" parameterType="java.lang.Integer">
+        select ct_name
+        from category
+        where ct_level = #{ct_level};
+    </select>
+
+    <select id="findCountsByLevel" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        select count(1)
+        from category
+        where ct_level = #{ct_level};
+    </select>
+
+    <insert id="addRecord" parameterType="com.muko.domain.Category">
+        insert into category
+        values (#{ct_code}, #{ct_name}, #{ct_level}, #{uct_code});
+    </insert>
+
+    <delete id="deleteByCode" parameterType="java.lang.String">
+        delete
+        from category
+        where ct_code = #{ct_code};
+    </delete>
+
+    <update id="updateRecord" parameterType="com.muko.domain.Category">
+        update category
+        set ct_name = #{ct_name}
+        where ct_code = #{ct_code};
+    </update>
+</mapper>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.muko.dao.SupplierDao">
+
+    <!--    <resultMap id="administratorMap" type="administrator">-->
+    <!--        <id property="admin_account" column="admin_account"/>-->
+    <!--        <result property="admin_password" column="admin_password"/>-->
+    <!--    </resultMap>-->
+
+    <resultMap id="supplierMap" type="com.muko.domain.Supplier">
+        <id property="sup_code" column="sup_code"/>
+        <result property="sup_name" column="sup_name"/>
+        <result property="sup_shop_name" column="sup_shop+name"/>
+        <result property="sup_phone" column="sup_phone"/>
+        <result property="sup_category" column="sup_category"/>
+        <result property="sup_address" column="sup_address"/>
+    </resultMap>
+
+    <insert id="insertRecord" parameterType="com.muko.domain.Supplier">
+        insert into supplier
+        values (#{sup_code}, #{sup_name}, #{sup_shop_name}, #{sup_phone}, #{sup_category}, #{sup_address});
+    </insert>
+
+    <select id="findCounts" resultType="java.lang.Integer">
+        select count(1)
+        from supplier;
+    </select>
+
+    <select id="findAll" resultMap="supplierMap">
+        select *
+        from supplier
+        where sup_category IS NOT NULL;
+    </select>
+
+    <select id="findByCode" resultMap="supplierMap" parameterType="java.lang.String">
+        select *
+        from supplier
+        where sup_code = #{sup_code};
+    </select>
+
+    <select id="findByCondition" resultMap="supplierMap" parameterType="com.muko.domain.Supplier">
+        select * from supplier where 1=1 and sup_category is not null
+        <if test="sup_code != null and sup_code != ''">
+            and sup_code like concat('%', #{sup_code}, '%')
+        </if>
+        <if test="sup_name != null and sup_name != ''">
+            and sup_name like concat('%', #{sup_name}, '%')
+        </if>
+        <if test="sup_phone != null and sup_phone != ''">
+            and sup_phone like concat('%', #{sup_phone}, '%')
+        </if>
+        <if test="sup_category != null and sup_category != '' and sup_category != '--'">
+            and sup_category like concat('%', #{sup_category}, '%')
+        </if>
+        <if test="sup_address != null and sup_address != ''">
+            and sup_address like concat('%', #{sup_address}, '%')
+        </if>
+    </select>
+
+    <select id="findCtByCode" resultType="java.lang.String" parameterType="java.lang.String">
+        select sup_category from supplier where sup_code=#{sup_code};
+    </select>
+
+    <update id="deleteByCode" parameterType="java.lang.String">
+        update supplier set sup_category=null where sup_code=#{sup_code};
+    </update>
+
+    <update id="updateRecord" parameterType="com.muko.domain.Supplier">
+        update supplier
+        set sup_name=#{sup_name},
+            sup_shop_name=#{sup_shop_name},
+            sup_phone=#{sup_phone},
+            sup_address=#{sup_address}
+        where sup_code = #{sup_code};
+    </update>
+
+</mapper>
